@@ -298,8 +298,8 @@ class svc_base():
         self.node = node 
         self.org_name = name
         self.name, self.namespaces = decode_name(name)
-        self.request = [ entry(n, e) for n, e in node["request"].items() ] if "request" in node and node["request"] else []
-        self.response = [ entry(n, e) for n, e in node["response"].items() ] if "response" in node and node["response"] else []
+        self.request = [ entry(n, e) for n, e in node["request"].items() ] if node is not None and "request" in node and node["request"] else []
+        self.response = [ entry(n, e) for n, e in node["response"].items() ] if node is not None and "response" in node and node["response"] else []
 
     def create_class(self):
         request_entries = "\n".join(f'    {decode_datatype(f, True)};' for f in self.request)
