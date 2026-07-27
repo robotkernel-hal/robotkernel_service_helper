@@ -199,7 +199,7 @@ typedef struct {{
         encode     = "\n".join(encode_lines)
         decode     = "\n".join(decode_lines)
         validation = "\n".join(f'            if (!node["{f.name}"]) {{ return false; }}' for f in self.fields)
-        typename   = "::".join(self.namespaces + [self.real_name])
+        typename   = "::".join(([args.add_namespace] if args.add_namespace else []) + self.namespaces + [self.real_name])
 
         return f'''
 // Definiere die Konvertierung für Test
@@ -220,7 +220,7 @@ namespace YAML {{
             return true;
         }}
     }};
-}}
+}};
 '''
 
 class pd_base():
@@ -543,7 +543,7 @@ def decode_datatype(elem, with_name=False, yaml_use=False):
 
     if not is_builtin(dtype):
         real_dtype = types[dtype]
-        dtype = "::".join(real_dtype.namespaces + [real_dtype.real_name])
+        dtype = "::".join(([args.add_namespace] if args.add_namespace else []) + real_dtype.namespaces + [real_dtype.real_name])
 
     if dtype == "string":
         dtype = "std::string"
@@ -609,7 +609,16 @@ if add_namespace is not None:
 
 for name, dtype in types.items():
     outfd.write(dtype.create_struct())
+
+if add_namespace is not None:
+    outfd.write(f'\n\n}} // namespace {add_namespace}\n')
+
+# YAML convert overloads must be outside of additional namespaace
+for name, dtype in types.items():
     outfd.write(dtype.create_yaml_coverters())
+
+if add_namespace is not None:
+    outfd.write(f'namespace {add_namespace} {{\n')
 
 for name, svc in bases.items():
     outfd.write(svc.create_class())
