@@ -239,12 +239,21 @@ class pd_base():
         remove_datatypes = []
 
         for e in self.fields:
-            if not is_builtin(e.type):
-                t = types[e.type]
+            def func(t):
                 add_datatypes.append(f'            ::robotkernel::add_datatype_definition(\n'
                                      f'                "{t.name}",\n'
                                      f'                {"::".join(t.namespaces + [t.real_name])}_datatype_definition);')
                 remove_datatypes.append(f'            ::robotkernel::remove_datatype_definition("{t.name}");')
+
+            def add_recursive(tn):
+                if not is_builtin(tn):
+                    t = types[tn]
+                    for e in t.fields:
+                        add_recursive(e.type)
+                    func(t)
+
+            add_recursive(e.type)
+
         add_datatypes = "\n".join(add_datatypes)
         remove_datatypes = "\n".join(remove_datatypes)
 
@@ -364,12 +373,21 @@ class svc_base():
         remove_datatypes = []
 
         for e in self.request + self.response:
-            if not is_builtin(e.type):
-                t = types[e.type]
+            def func(t):
                 add_datatypes.append(f'            ::robotkernel::add_datatype_definition(\n'
                                      f'                "{t.name}",\n'
                                      f'                {"::".join(t.namespaces + [t.real_name])}_datatype_definition);')
                 remove_datatypes.append(f'            ::robotkernel::remove_datatype_definition("{t.name}");')
+
+            def add_recursive(tn):
+                if not is_builtin(tn):
+                    t = types[tn]
+                    for e in t.fields:
+                        add_recursive(e.type)
+                    func(t)
+
+            add_recursive(e.type)
+
         add_datatypes = "\n".join(add_datatypes)
         remove_datatypes = "\n".join(remove_datatypes)
 
