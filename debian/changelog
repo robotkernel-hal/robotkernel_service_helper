@@ -1,3 +1,29 @@
+robotkernel-generator (6.0.2) unstable; urgency=low
+
+  * fix: nested custom datypes added recursively now
+
+ -- Robert Burger <robert.burger@dlr.de>  Tue, 28 Jul 2026 07:34:09 +0200
+
+robotkernel-generator (6.0.1) unstable; urgency=low
+
+  * fix: YAML converters when an additional namepsace was specified
+  * fix: rk generate for empty node
+  * github: build also on trixie
+  * github: fix steps
+  * github: split build
+  * fix: updated actions
+  * fix: revision
+  * fix: revision
+  * del: removed package from changelog
+  * fix: full_version of deb package
+  * inc: version to 6.0.0-4
+  * github: update release build action
+  * github: update release build action
+  * github: update release build action
+  * fix: github action push
+
+ -- Robert Burger <robert.burger@dlr.de>  Mon, 27 Jul 2026 10:13:01 +0200
+
 robotkernel-generator (6.0.0) stable; urgency=low
 
   * parsing new yaml idl files
